@@ -1,6 +1,16 @@
 import React from "react";
+interface Book {
+  key: string;
+  title: string;
+  author_name?: string[];
+  cover_i?: number;
+}
+interface BookCardProps {
+  book: Book;
+  addToBookshelf: (book: Book) => void;
+}
 
-const BookCard = ({ book, addToBookshelf }) => {
+const BookCard: React.FC<BookCardProps> = ({ book, addToBookshelf }) => {
   const { title, author_name, cover_i } = book;
 
   return (

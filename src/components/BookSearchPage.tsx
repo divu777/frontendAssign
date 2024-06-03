@@ -2,12 +2,21 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BookCard from "./BookCard";
 
-const BookSearchPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [bookshelf, setBookshelf] = useState([]);
+interface Book {
+  key: string;
+  title: string;
+  author_name?: string[];
+  cover_i?: number;
+}
+
+type Bookshelf = Book[];
+
+const BookSearchPage: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [bookshelf, setBookshelf] = useState<Bookshelf>([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -23,8 +32,8 @@ const BookSearchPage = () => {
         }
         setLoading(false);
         setError(null);
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError((err as Error).message);
         setLoading(false);
       }
     };
@@ -32,9 +41,10 @@ const BookSearchPage = () => {
     fetchBooks();
   }, [searchQuery]);
 
-  const addToBookshelf = (book) => {
-    setBookshelf([...bookshelf, book]);
-    localStorage.setItem("bookshelf", JSON.stringify([...bookshelf, book]));
+  const addToBookshelf = (book: Book) => {
+    const updatedBookshelf = [...bookshelf, book];
+    setBookshelf(updatedBookshelf);
+    localStorage.setItem("bookshelf", JSON.stringify(updatedBookshelf));
   };
 
   return (
